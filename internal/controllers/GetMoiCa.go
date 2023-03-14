@@ -1,9 +1,8 @@
 package controllers
 
 import (
-	"github.com/gorilla/mux"
 	"net/http"
-	"serveur/internal/repository"
+	
 )
 
 func GetMoiCa(w http.ResponseWriter, r *http.Request) {
