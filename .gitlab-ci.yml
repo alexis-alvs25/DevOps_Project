@@ -1,0 +1,16 @@
+variables:
+  APP_NAME: go_app
+  APP_VERSION: 1.0
+
+
+stages:
+  - build
+
+
+build:
+  image: docker:latest
+  stage: build
+  script:
+    - echo "Building Docker image for $APP_NAME:$APP_VERSION..."
+    - docker build -t $APP_NAME:$APP_VERSION .
+    - echo "Docker image built successfully."
