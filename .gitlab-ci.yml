@@ -1,6 +1,8 @@
 variables:
   APP_NAME: go_app
   APP_VERSION: 1.0
+  PORT: 8000
+  VAULT_URL: "https://vault.edu.forestier.re"
 
 
 stages:
@@ -11,6 +13,15 @@ build:
   image: docker:latest
   stage: build
   script:
-    - echo "Building Docker image for $APP_NAME:$APP_VERSION..."
-    - docker build -t $APP_NAME:$APP_VERSION .
+    - apk add --quiet python3 curl
+    - curl -s -o jq.py -0 https://git.forestier.re/uca/2022-2023/devops-m1/jq/-/raw/main/jq.py
+    - . ./init.sh
+
+    - docker login $CI_REGISTRY_URL -u $CI_REGISTRY_USERNAME -p $CI_REGISTRY_PASSWORD
+    - echo "Logged in to Docker registry successfully."
+
+    - docker build -t $CI_REGISTRY_URL/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$APP_VERSION .
     - echo "Docker image built successfully."
+
+    - docker push $CI_REGISTRY_URL/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$APP_VERSION
+    - echo "Docker image pushed successfully."
