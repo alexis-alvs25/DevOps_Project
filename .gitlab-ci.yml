@@ -15,12 +15,12 @@ build:
   script:
     - apk add --quiet python3 curl
     - curl -s -o jq.py -0 https://git.forestier.re/uca/2022-2023/devops-m1/jq/-/raw/main/jq.py
-    - . ./init.sh
+    - . ./go_app/init.sh
 
     - docker login $DOCKER_REGISTRY_URL -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - echo "Logged in to Docker registry successfully."
 
-    - docker build -t $DOCKER_REGISTRY_URL/$CI_PROJECT_NAMESPACE/$APP_NAME:$APP_VERSION .
+    - docker build -t $DOCKER_REGISTRY_URL/$CI_PROJECT_NAMESPACE/$APP_NAME:$APP_VERSION ./go_app
     - echo "Docker image built successfully."
 
     - docker push $DOCKER_REGISTRY_URL/$CI_PROJECT_NAMESPACE/$APP_NAME:$APP_VERSION
