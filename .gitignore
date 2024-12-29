@@ -22,3 +22,6 @@ config.yaml
 app-cred-app_cred1-openrc.sh
 
 jumphost
+
+# Ansible
+inventories

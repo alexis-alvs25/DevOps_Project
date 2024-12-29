@@ -1,8 +1,6 @@
 variables:
   APP_NAME: go_app
   APP_VERSION: 1.0
-  PORT: 8000
-  VAULT_URL: "https://vault.edu.forestier.re"
 
 
 stages:

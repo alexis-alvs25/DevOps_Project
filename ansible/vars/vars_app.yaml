@@ -1,0 +1,4 @@
+app_packages:
+  - docker-compose.yml
+  - Dockerfile
+  - init.sql

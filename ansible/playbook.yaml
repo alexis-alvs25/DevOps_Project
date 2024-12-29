@@ -1,0 +1,19 @@
+- name: List the contents of /home/debian
+  hosts: servers
+  vars_files:
+    - vars/vars_app.yaml
+  roles:
+    - geerlingguy.docker          # Role to install Docker
+  become: yes
+
+  tasks:
+    - name: Create a directory on the VM to contain Docker files
+      ansible.builtin.file:
+        path: /home/debian/docker
+        state: directory
+
+    - name: Copy local Docker files to the VM
+      ansible.builtin.copy:
+        src: ./../docker/{{ item }}
+        dest: /home/debian/docker/{{ item }}
+      with_items: "{{ app_packages }}"
