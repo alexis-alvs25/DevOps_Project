@@ -25,3 +25,8 @@ jumphost
 
 # Ansible
 inventories
+
+jq.py
+local_env.sh
+
+README.md

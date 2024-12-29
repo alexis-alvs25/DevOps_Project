@@ -17,3 +17,32 @@
         src: ./../docker/{{ item }}
         dest: /home/debian/docker/{{ item }}
       with_items: "{{ app_packages }}"
+
+      # Construction des images Docker
+
+    - name: Log into private registry and force re-authorization
+      docker_login:
+        registry: ${DOCKER_REGISTRY_URL}
+        username: ${DOCKER_REGISTRY_USER}
+        password: ${DOCKER_REGISTRY_PASSWORD}
+        reauthorize: yes
+
+    - name: Build an image and push it to a private repo
+      community.docker.docker_image:
+        build:
+          path: /home/debian/docker/
+        name: ${DOCKER_REGISTRY_URL}/init_mariadb
+        tag: v1
+        push: true
+        source: build
+
+    - name: Deploy Docker Compose images
+      community.docker.docker_compose_v2:
+        project_src: /home/debian/docker/
+        files:
+          - docker-compose.yml
+      register: output
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
