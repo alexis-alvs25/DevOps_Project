@@ -19,5 +19,5 @@ SECRET_HOME=$(curl -s -X GET -k --header "X-Vault-Token: $VAULT_TOKEN" "$VAULT_A
 export MARIADB_ROOT_PASSWORD=$(echo "$SECRET_HOME" | python3 jq.py "data/data/MARIADB_ROOT_PASSWORD")
 export NEXTCLOUD_USER=$(echo "$SECRET_HOME" | python3 jq.py "data/data/NEXTCLOUD_USER")
 export NEXTCLOUD_PASSWORD=$(echo "$SECRET_HOME" | python3 jq.py "data/data/NEXTCLOUD_PASSWORD")
-export WORDPRESS_USER =$(echo "$SECRET_HOME" | python3 jq.py "data/data/WORDPRESS_USER")
+export WORDPRESS_USER=$(echo "$SECRET_HOME" | python3 jq.py "data/data/WORDPRESS_USER")
 export WORDPRESS_PASSWORD=$(echo "$SECRET_HOME" | python3 jq.py "data/data/WORDPRESS_PASSWORD")
