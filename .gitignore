@@ -20,6 +20,7 @@ clouds.yaml
 config.yaml
 .terraform/
 app-cred-app_cred1-openrc.sh
+terraform/terraform.tfvars
 
 jumphost
 
