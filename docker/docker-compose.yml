@@ -37,3 +37,9 @@ services:
       - WORDPRESS_DB_NAME=wordpress
       - WORDPRESS_DB_USER=${WORDPRESS_USER}
       - WORDPRESS_DB_PASSWORD=${WORDPRESS_PASSWORD}
+
+  go_app:
+    image: ${DOCKER_REGISTRY_URL}/go_app:1.0
+    restart: unless-stopped
+    ports:
+      - "[::]:8000:8000"

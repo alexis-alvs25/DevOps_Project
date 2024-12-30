@@ -18,8 +18,8 @@ build:
     - docker login $DOCKER_REGISTRY_URL -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - echo "Logged in to Docker registry successfully."
 
-    - docker build -t $DOCKER_REGISTRY_URL/$CI_PROJECT_NAMESPACE/$APP_NAME:$APP_VERSION ./go_app
+    - docker build -t $DOCKER_REGISTRY_URL/$APP_NAME:$APP_VERSION ./go_app
     - echo "Docker image built successfully."
 
-    - docker push $DOCKER_REGISTRY_URL/$CI_PROJECT_NAMESPACE/$APP_NAME:$APP_VERSION
+    - docker push $DOCKER_REGISTRY_URL/$APP_NAME:$APP_VERSION
     - echo "Docker image pushed successfully."
