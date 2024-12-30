@@ -2,6 +2,7 @@
   hosts: servers
   vars_files:
     - vars/vars_app.yaml
+    - vars/vars_secrets.yaml
   roles:
     - geerlingguy.docker          # Role to install Docker
   become: yes
@@ -18,20 +19,30 @@
         dest: /home/debian/docker/{{ item }}
       with_items: "{{ app_packages }}"
 
-      # Construction des images Docker
+    - name: Copy .env.j2 for Docker Compose environment variables     
+      ansible.builtin.template: 
+        src: templates/.env.j2                    
+        dest: /home/debian/docker/.env
+
+    - name: Copy init.sql.j2 for MariaDB initialization   
+      ansible.builtin.template: 
+        src: templates/init.sql.j2                   
+        dest: /home/debian/docker/init.sql
+
+      # Building Docker images
 
     - name: Log into private registry and force re-authorization
       docker_login:
-        registry: ${DOCKER_REGISTRY_URL}
-        username: ${DOCKER_REGISTRY_USER}
-        password: ${DOCKER_REGISTRY_PASSWORD}
+        registry: "{{ docker_registry_url }}"
+        username: "{{ docker_registry_user }}"
+        password: "{{ docker_registry_password }}"
         reauthorize: yes
 
     - name: Build an image and push it to a private repo
       community.docker.docker_image:
         build:
           path: /home/debian/docker/
-        name: ${DOCKER_REGISTRY_URL}/init_mariadb
+        name: "{{ docker_registry_url }}/init_mariadb"
         tag: v1
         push: true
         source: build

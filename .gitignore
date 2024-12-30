@@ -25,6 +25,8 @@ jumphost
 
 # Ansible
 inventories
+vault-pass.txt
+ansible/roles
 
 jq.py
 local_env.sh

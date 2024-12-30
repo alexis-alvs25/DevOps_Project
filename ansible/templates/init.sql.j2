@@ -1,0 +1,9 @@
+-- Initialization of MariaDB with 2 users and 2 databases.
+
+CREATE USER '{{ nextcloud_user }}'@'%' IDENTIFIED BY '{{ nextcloud_password }}';
+CREATE USER '{{ wordpress_user }}'@'%' IDENTIFIED BY '{{ wordpress_password }}';
+CREATE DATABASE nextcloud;
+CREATE DATABASE wordpress;
+GRANT ALL PRIVILEGES ON nextcloud.* TO '{{ nextcloud_user }}'@'%';
+GRANT ALL PRIVILEGES ON wordpress.* TO '{{ wordpress_user }}'@'%';
+FLUSH PRIVILEGES;

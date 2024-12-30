@@ -32,6 +32,17 @@ resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_1" {
   security_group_id = openstack_networking_secgroup_v2.secgroup1.id
 }
 
+# Rule for Nextcloud and Wordpress (port 8080 and 8081) for IPv6
+resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_http_apps" {
+  direction         = "ingress"
+  ethertype         = "IPv6"
+  protocol          = "tcp"
+  port_range_min    = 8080
+  port_range_max    = 8081
+  remote_ip_prefix  = "::/0"
+  security_group_id = openstack_networking_secgroup_v2.secgroup1.id
+}
+
 output "vm_ipv6" {
   value = openstack_compute_instance_v2.basic.access_ip_v6
 }
