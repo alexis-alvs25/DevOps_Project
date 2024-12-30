@@ -10,9 +10,12 @@ services:
 
   nextcloud:
     image: nextcloud:apache
+    labels: # Traefik rules
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.rule=Host(`cloud.alalves.uca-devops.ovh`)"
+      - "traefik.http.routers.nextcloud.entrypoints=https"
+      - "traefik.http.routers.nextcloud.tls.certresolver=myresolver"
     restart: unless-stopped
-    ports:
-      - "[::]:8080:80"
     depends_on:
       - mariadb
     volumes:
@@ -25,9 +28,12 @@ services:
 
   wordpress:
     image: wordpress
+    labels: # Traefik rules
+      - "traefik.enable=true"
+      - "traefik.http.routers.wordpress.rule=Host(`blog.alalves.uca-devops.ovh`)"
+      - "traefik.http.routers.wordpress.entrypoints=https"
+      - "traefik.http.routers.wordpress.tls.certresolver=myresolver"
     restart: unless-stopped
-    ports:
-      - "[::]:8081:80"
     depends_on:
       - mariadb
     volumes:
@@ -40,6 +46,29 @@ services:
 
   go_app:
     image: ${DOCKER_REGISTRY_URL}/go_app:1.0
+    labels: # Traefik rules
+      - "traefik.enable=true"
+      - "traefik.http.routers.goapp.rule=Host(`projet.alalves.uca-devops.ovh`)"
+      - "traefik.http.routers.goapp.entrypoints=https"
+      - "traefik.http.routers.goapp.tls.certresolver=myresolver"
     restart: unless-stopped
+
+  traefik:
+    image: traefik:v3.2
+    command:
+      - "--api=true"                                                              # Enable Traefik API
+      - "--api.dashboard=false"                                                   # Disable the dashboard (access at http://traefik.localhost:8080)
+      - "--providers.docker=true"                                                 # Enable automatic discovery of Docker services
+      - "--providers.docker.exposedbydefault=false"                               # Containers must be explicitly exposed
+      - "--entrypoints.http.address=:80"                                          # Define an HTTP entry point
+      - "--entrypoints.https.address=:443"                                        # Define an HTTPS entry point
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"               # Let's Encrypt challenges
+      - "--certificatesresolvers.myresolver.acme.email=noreply@forestier.re"      # Let's Encrypt email
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"  # Certificate storage
     ports:
-      - "[::]:8000:8000"
+      - "[::]:80:80"         # HTTP
+      - "[::]:443:443"       # HTTPS
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "./letsencrypt:/letsencrypt"
+      - "./traefik:/etc/traefik"                                                  # Volume for additional files like traefik.yml

@@ -32,6 +32,39 @@ resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_1" {
   security_group_id = openstack_networking_secgroup_v2.secgroup1.id
 }
 
+# HTTP rule for IPv6
+resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_http" {
+  direction         = "ingress"
+  ethertype         = "IPv6"
+  protocol          = "tcp"
+  port_range_min    = 80
+  port_range_max    = 80
+  remote_ip_prefix  = "::/0"
+  security_group_id = openstack_networking_secgroup_v2.secgroup1.id
+}
+
+# HTTPS rule for IPv6
+resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_https_ingress" {
+  direction         = "ingress"
+  ethertype         = "IPv6"
+  protocol          = "tcp"
+  port_range_min    = 443
+  port_range_max    = 443
+  remote_ip_prefix  = "::/0"
+  security_group_id = openstack_networking_secgroup_v2.secgroup1.id
+}
+
+# Allow outbound traffic to Let's Encrypt servers for certificate generation
+resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_https_egress" {
+  direction         = "egress"
+  ethertype         = "IPv6"
+  protocol          = "tcp"
+  port_range_min    = 443
+  port_range_max    = 443
+  remote_ip_prefix  = "::/0"
+  security_group_id = openstack_networking_secgroup_v2.secgroup1.id
+}
+
 # Ipv6 rule for Nextcloud
 resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_http_nextcloud" {
   direction         = "ingress"

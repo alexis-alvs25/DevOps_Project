@@ -29,6 +29,11 @@
         src: templates/init.sql.j2                   
         dest: /home/debian/docker/init.sql
 
+    - name: Create directory for Traefik certificates
+      ansible.builtin.file:
+        path: /home/debian/docker/letsencrypt
+        state: directory
+
       # Building Docker images
 
     - name: Log into private registry and force re-authorization
