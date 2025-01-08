@@ -13,6 +13,11 @@
         path: /home/debian/docker
         state: directory
 
+    - name: Create a directory on the VM to contain Docker files
+      ansible.builtin.file:
+        path: /home/debian/docker/traefik
+        state: directory
+
     - name: Copy local Docker files to the VM
       ansible.builtin.copy:
         src: ./../docker/{{ item }}
@@ -28,6 +33,16 @@
       ansible.builtin.template: 
         src: templates/init.sql.j2                   
         dest: /home/debian/docker/init.sql
+
+    - name: Copy prometheus.yml.j2 for Prometheus configuration   
+      ansible.builtin.template: 
+        src: templates/prometheus.yml.j2            
+        dest: /home/debian/docker/prometheus.yml
+
+    - name: Copy traefik.yml.j2 for Traefik configuration   
+      ansible.builtin.template: 
+        src: templates/traefik.yml.j2            
+        dest: /home/debian/docker/traefik/traefik.yml
 
     - name: Create directory for Traefik certificates
       ansible.builtin.file:
