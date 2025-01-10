@@ -1,0 +1,17 @@
+#cloud-config
+users:
+  - name: debian
+    groups: sudo
+    shell: /bin/bash
+    sudo: [ 'ALL=(ALL) NOPASSWD:ALL' ]
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDDKWeOWrJDygVe2Ri6barwTayat8vffhONf2k7aJhEz1M8iGUrivFYJTm+s5TD4IZ7K+ITz3jPyl6COolrS2gtYRT+8qWEbYvf5zp1CrBt7Bv/y7f6lJypXQvzZj4/MR4GpG+U1V/mTsbvha1oOcCaGRIlx1OF8Z7d17cckXqs9Eprb+dk2+qegCTTsA30LWUD+spYoWfu77P+9geBK7jigkn7DObRrwhcQ2rhsR9is1Z+strhCvnJQoChxY3kj3C5I3CuGB6DGCMz/atU2h5X9taGrGpfkOrNmjEcHzk5bOcrar6jRC3fwUSPHm1nHVKdj2VoSXCAUhqy4Pk5osK/oJ0HUMCRsPMYSOY/VRcuu9IROURrOGGQQrEHC9GwVwoZur7fbAJTZfQIvx84k3TgNUOskYLtlJr4SDOfT6RiHLLnKkt/avyyMFtsUoaGihGFbb6pdW+rjOoPbZAh55HnxhzeMNwgP9iZcmsSkaY8aPDf2xeywx1jg9+liFbENLIScNqxMBTIkF2XKhA0Q/PE8Nk3KKbxl4wKyyM1HP96KG9oYdwTipuS2rRleeocFMNJx5HHCTtLfOwwoOwsdMN+sY9luM7Q0BuMCoQ/T/CQQSiQM+X/9qEAOAylTFr1xrWbLz0enAA6JJKMxpyzKs5QGjtWcRkgYilhKEtkh43Lqw== alexisalvs@legion-y540-15irh
+
+
+write_files:
+  - path: /etc/systemd/resolved.conf
+    content: |
+      [Resolve]
+      DNS=2a00:1098:2c::1 2a01:4f8:c2c:123f::1
+runcmd:
+  - systemctl restart systemd-resolved

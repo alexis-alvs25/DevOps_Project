@@ -3,23 +3,55 @@ variables:
   APP_VERSION: 1.0
 
 
+before_script:
+  # Install jq and python3
+  - apk add --quiet python3 curl
+  - curl -s -o jq.py -0 https://git.forestier.re/uca/2022-2023/devops-m1/jq/-/raw/main/jq.py
+  # Get my secrets from Vault
+  - . ./get_secrets.sh
+  # Extract clouds.yaml from secrets and install tofu
+  - echo "$CLOUDS_YAML" > terraform/clouds.yaml
+  - curl -fsSL -o tofu.apk https://github.com/opentofu/opentofu/releases/download/v1.9.0/tofu_1.9.0_386.apk
+  - apk add --allow-untrusted tofu.apk
+  - tofu --version
+
+
 stages:
   - build
+  - init
+  - apply
 
 
 build:
   image: docker:latest
   stage: build
   script:
-    - apk add --quiet python3 curl
-    - curl -s -o jq.py -0 https://git.forestier.re/uca/2022-2023/devops-m1/jq/-/raw/main/jq.py
-    - . ./init.sh
-
     - docker login $DOCKER_REGISTRY_URL -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - echo "Logged in to Docker registry successfully."
-
     - docker build -t $DOCKER_REGISTRY_URL/$APP_NAME:$APP_VERSION ./go_app
     - echo "Docker image built successfully."
-
     - docker push $DOCKER_REGISTRY_URL/$APP_NAME:$APP_VERSION
     - echo "Docker image pushed successfully."
+
+
+init:
+  image: alpine:latest
+  stage: init
+  script:
+    - tofu -chdir=terraform init
+  artifacts:
+    paths:
+      - terraform/.terraform
+      - terraform/.terraform.lock.hcl
+    expire_in: 1h
+
+
+apply:
+  stage: apply
+  script:
+    - tofu -chdir=terraform apply -auto-approve
+  dependencies:
+    - init
+
+
+# TODO: Ansible playbook stage to deploy Docker containers

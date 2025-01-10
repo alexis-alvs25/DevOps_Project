@@ -17,19 +17,12 @@ terraform.tfstate.backup
 .terraform.lock.hcl
 terraform.tfstate.lock.info
 clouds.yaml
-config.yaml
 .terraform/
 app-cred-app_cred1-openrc.sh
 terraform/terraform.tfvars
 
-jumphost
-
 # Ansible
-inventories
-vault-pass.txt
-ansible/roles
-
-jq.py
-local_env.sh
+roles
+inventory.ini
 
 README.md
